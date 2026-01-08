@@ -1,0 +1,37 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}LFE Y-Sport – Dashboard{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<!-- Google Fonts -->
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Oxanium:wght@400;600&display=swap">
+<link rel="stylesheet" href="{% static 'admin/css/lfe_admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div class="lfe-branding">
+    <div class="lfe-logo-circle">
+        <img src="{% static 'admin/img/logo-lfe.png' %}" alt="LFE Y-Sport" class="lfe-logo">
+    </div>
+    <div class="lfe-brand-text">
+        <span class="lfe-brand-title">LFE Y-SPORT</span>
+        <span class="lfe-brand-subtitle">Esport Admin Panel</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block usertools %}
+<div class="lfe-topbar-right">
+    <form action="{% url 'admin:index' %}" method="get" class="lfe-search-form">
+        <input type="text" name="q" placeholder="Search…" class="lfe-search-input">
+    </form>
+    <div class="lfe-user-info">
+        {{ block.super }}
+    </div>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

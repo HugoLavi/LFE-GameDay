@@ -1,0 +1,454 @@
+/* =========================
+   LFE Y-SPORT — THEME (Vite)
+   Clean • Centered • Responsive
+   ========================= */
+
+:root {
+    --bleu-amiral: #273a6d;
+    --bleu-cyber: #344797;
+    --bleu-futur: #36d4ff;
+    --bleu-absolu: #101425;
+    --orange-cuivre: #eb7e22;
+    --orange-ambre: #ffab2b;
+    --blanc-lunaire: #eceff9;
+
+    --text-muted: rgba(236, 239, 249, 0.78);
+
+    --border: rgba(52, 71, 151, 0.9);
+    --card: rgba(39, 58, 109, 1);
+    --card-soft: rgba(39, 58, 109, 0.55);
+
+    --shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+    --shadow-soft: 0 12px 35px rgba(0, 0, 0, 0.25);
+
+    --radius: 18px;
+    --radius-sm: 12px;
+
+    --nav-height: 72px;
+}
+
+/* ===== Reset / Base ===== */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: var(--bleu-absolu);
+    color: var(--blanc-lunaire);
+}
+
+/* A little nicer typography */
+h1,
+h2,
+h3,
+h4 {
+    margin: 0;
+}
+
+a {
+    color: inherit;
+}
+
+/* ===== Layout ===== */
+.page {
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 18px;
+}
+
+.section {
+    padding: 48px 0;
+}
+
+/* ===== Titles ===== */
+.h1 {
+    font-size: clamp(34px, 4vw, 56px);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.p-sub {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+/* ===== NAV ===== */
+.nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: rgba(39, 58, 109, 0.78);
+    backdrop-filter: blur(10px);
+}
+
+.nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 2px solid var(--bleu-futur);
+    background: rgba(16, 20, 37, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--bleu-futur);
+    position: relative;
+}
+
+.brand-badge::after {
+    content: "";
+    position: absolute;
+    inset: -14px;
+    background: rgba(54, 212, 255, 0.18);
+    filter: blur(18px);
+    z-index: -1;
+    border-radius: 999px;
+}
+
+.brand-title {
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: rgba(52, 71, 151, 1);
+    border: 1px solid rgba(54, 212, 255, 0.18);
+    color: var(--blanc-lunaire);
+    text-decoration: none;
+    font-weight: 750;
+    transition: 0.18s;
+}
+
+.nav-link:hover {
+    transform: translateY(-1px);
+    border-color: rgba(54, 212, 255, 0.55);
+    box-shadow: var(--shadow-soft);
+}
+
+.nav-link.active {
+    background: var(--bleu-futur);
+    color: var(--bleu-absolu);
+    border-color: rgba(54, 212, 255, 0.75);
+}
+
+/* ===== Buttons ===== */
+.btn {
+    border: none;
+    cursor: pointer;
+    border-radius: 14px;
+    padding: 12px 18px;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: 0.18s;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
+}
+
+.btn-primary {
+    background: var(--bleu-futur);
+    color: var(--bleu-absolu);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--orange-cuivre);
+    border: 2px solid var(--orange-cuivre);
+}
+
+.btn-outline:hover {
+    background: rgba(235, 126, 34, 0.12);
+}
+
+/* ===== Cards ===== */
+.card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.card.soft {
+    background: var(--card-soft);
+}
+
+.card-pad {
+    padding: 18px;
+}
+
+.card-title {
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+}
+
+/* ===== HERO — PERFECTLY CENTERED ===== */
+.hero {
+    position: relative;
+    min-height: calc(100vh - var(--nav-height));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at top, rgba(54, 212, 255, 0.12), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(235, 126, 34, 0.10), transparent 55%);
+}
+
+/* subtle overlay */
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(39, 58, 109, 0.18), transparent 55%);
+    pointer-events: none;
+}
+
+.blob {
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    filter: blur(85px);
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.blob.one {
+    background: rgba(54, 212, 255, 0.38);
+    top: 10%;
+    left: 8%;
+}
+
+.blob.two {
+    background: rgba(235, 126, 34, 0.32);
+    bottom: 8%;
+    right: 10%;
+}
+
+.hero-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 1;
+}
+
+.hero-content {
+    width: 100%;
+    max-width: 920px;
+    padding: 64px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* REAL CENTERING */
+    text-align: center;
+}
+
+.logo-big {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid var(--bleu-futur);
+    background: var(--bleu-amiral);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+    box-shadow: 0 0 60px rgba(54, 212, 255, 0.25);
+}
+
+.logo-big span {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    color: var(--bleu-futur);
+}
+
+.hero-title {
+    font-size: clamp(48px, 6vw, 72px);
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+}
+
+.hero-subtitle {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--bleu-futur);
+    margin: 0 0 14px;
+}
+
+.hero-text {
+    max-width: 740px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin: 0 0 24px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 36px;
+}
+
+/* Cards under hero */
+.hero-cards {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+    justify-items: center;
+}
+
+.hero-cards .card {
+    width: 100%;
+    max-width: 460px;
+}
+
+/* ===== Mini list (upcoming matches) ===== */
+.mini-list {
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mini-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(54, 212, 255, 0.18);
+}
+
+.mini-item:last-child {
+    border-bottom: none;
+}
+
+.mini-date {
+    font-weight: 900;
+    color: var(--bleu-futur);
+    white-space: nowrap;
+}
+
+.mini-match {
+    color: var(--text-muted);
+    text-align: right;
+}
+
+.small-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--bleu-futur);
+    text-decoration: none;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+}
+
+.small-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== Helpers ===== */
+.grid {
+    display: grid;
+}
+
+.gap-6 {
+    gap: 14px;
+}
+
+.gap-8 {
+    gap: 20px;
+}
+
+.mb-4 {
+    margin-bottom: 12px;
+}
+
+/* ===== Responsive tweaks ===== */
+@media (max-width: 720px) {
+    .nav-links {
+        gap: 8px;
+    }
+
+    .nav-link {
+        padding: 9px 12px;
+        font-size: 14px;
+    }
+
+    .brand-title {
+        display: none;
+    }
+
+    /* optional: cleaner on mobile */
+    .hero-content {
+        padding: 54px 16px;
+    }
+
+    .logo-big {
+        width: 104px;
+        height: 104px;
+    }
+}

@@ -1,0 +1,458 @@
+/* =========
+   PALETTE LFE
+   ========= */
+:root {
+    --bleu-amiral: #273a6d;
+    --bleu-cyber: #344797;
+    --bleu-futur: #36d4ff;
+    --bleu-absolu: #101425;
+    --orange-cuivre: #e67e22;
+    --orange-ambre: #ffab2b;
+    --blanc-lunaire: #eeeff9;
+    --gris-fond: #f5f6fb;
+    --header-link-color: #111 ! important;
+}
+
+/* =========
+   RESET GLOBAL
+   ========= */
+body {
+    background-color: var(--gris-fond);
+    color: #111827;
+    font-family: "Arial Black", Arial, sans-serif;
+}
+
+/* =========
+   HEADER (top bar)
+   ========= */
+#header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1000;
+}
+
+/* Branding à gauche */
+.lfe-branding {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.lfe-logo-circle {
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 20%, var(--bleu-futur), var(--bleu-amiral));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lfe-logo {
+    max-height: 22px;
+    max-width: 22px;
+}
+
+.lfe-brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.lfe-brand-title {
+    font-family: "Orbitron", system-ui, sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--bleu-absolu);
+}
+
+.lfe-brand-subtitle {
+    font-family: "Oxanium", system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #9ca3af;
+}
+
+/* Zone droite du header (search + user) */
+.lfe-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+/* Search */
+.lfe-search-form {
+    position: relative;
+}
+
+.lfe-search-input {
+    padding: 8px 12px 8px 32px;
+    border-radius: 999px;
+    border: 1px solid #e5e7eb;
+    font-size: 13px;
+    min-width: 230px;
+    background-color: #f9fafb;
+    outline: none;
+}
+
+.lfe-search-input:focus {
+    border-color: var(--bleu-futur);
+    box-shadow: 0 0 0 2px rgba(54, 212, 255, 0.25);
+}
+
+
+/* On cache le texte "Welcome, ..." pour avoir un rendu plus clean */
+#user-tools {
+    font-size: 12px;
+}
+
+/* =========
+   LAYOUT GLOBAL : SIDEBAR + CONTENT
+   ========= */
+#container {
+    margin-top: 64px;
+    /* place le contenu sous la topbar */
+    display: flex;
+    min-height: calc(100vh - 64px);
+}
+
+/* Sidebar gauche (nav apps) */
+#nav-sidebar {
+    width: 230px;
+    background: var(--bleu-absolu);
+    color: var(--blanc-lunaire);
+    border-right: 1px solid #0b1020;
+    padding-top: 16px;
+    position: fixed;
+    top: 64px;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+/* Dans Django 5, le contenu principal a cette classe */
+#content {
+    margin-left: 230px;
+    flex-grow: 1;
+    padding: 24px 32px 40px;
+    background-color: var(--gris-fond);
+}
+
+/* = Sidebar items = */
+#nav-sidebar .module {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+#nav-sidebar h2 {
+    font-family: "Oxanium", system-ui, sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #9ca3af;
+    padding: 0 20px 8px;
+    border: none;
+}
+
+#nav-sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 8px 16px;
+}
+
+#nav-sidebar li {
+    margin: 2px 0;
+}
+
+#nav-sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    color: #e5e7f5;
+}
+
+#nav-sidebar a::before {
+    content: "●";
+    font-size: 8px;
+    color: var(--bleu-futur);
+}
+
+#nav-sidebar a:hover {
+    background: rgba(54, 212, 255, 0.08);
+}
+
+#nav-sidebar .current-model a,
+#nav-sidebar .current-app .section {
+    background: linear-gradient(135deg, var(--bleu-cyber), var(--bleu-amiral));
+}
+
+/* =========
+   TITRES + BREADCRUMB
+   ========= */
+#content h1 {
+    font-family: "Orbitron", system-ui, sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--bleu-absolu);
+    margin-top: 4px;
+    margin-bottom: 18px;
+}
+
+div.breadcrumbs {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 10px;
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+/* =========
+   MODULES / CARTES
+   ========= */
+.module,
+#content-main .module,
+#content-related .module {
+    background-color: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+    margin-bottom: 20px;
+}
+
+.module h2,
+.module caption {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 14px 14px 0 0;
+    padding: 12px 18px;
+    font-family: "Oxanium", system-ui, sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #6b7280;
+}
+
+/* =========
+   TABLEAUX (listes admin)
+   ========= */
+.change-list .results,
+.change-list .module table {
+    border-radius: 0 0 14px 14px;
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+}
+
+thead th {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+td,
+th {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 13px;
+}
+
+tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+tr:hover {
+    background-color: #eef2ff;
+}
+
+/* Liens dans les tableaux */
+a,
+a:link,
+a:visited {
+    color: var(--bleu-cyber);
+}
+
+a:hover,
+a:focus {
+    color: var(--orange-cuivre);
+}
+
+a.section {
+    color: var(--blanc-lunaire);
+    font-weight: 600;
+}
+
+/* =========
+   BOUTONS / SUBMIT
+   ========= */
+.button,
+input[type="submit"],
+input[type="button"],
+.submit-row input,
+a.button {
+    background-image: linear-gradient(135deg, var(--orange-cuivre), var(--orange-ambre));
+    border-radius: 999px;
+    border: none;
+    color: #111827;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 8px 18px;
+    cursor: pointer;
+    font-size: 11px;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.45);
+}
+
+.button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+.submit-row input:hover,
+a.button:hover {
+    filter: brightness(1.06);
+    box-shadow: 0 6px 16px rgba(249, 115, 22, 0.65);
+}
+
+/* Ligne des boutons dans les formulaires */
+.submit-row {
+    background: transparent;
+    border-top: none;
+    padding: 16px 0 0;
+}
+
+/* =========
+   FORMULAIRES / FIELDS
+   ========= */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+textarea,
+select,
+.vTextField {
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    padding: 6px 10px;
+    font-size: 13px;
+    width: 100%;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--bleu-futur);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(54, 212, 255, 0.2);
+}
+
+/* =========
+   LOGIN PAGE
+   ========= */
+.login #header {
+    position: static;
+    height: auto;
+    justify-content: center;
+}
+
+.login #container {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: radial-gradient(circle at top left, var(--bleu-futur), var(--bleu-amiral));
+}
+
+.login #content {
+    margin-left: 0;
+    padding: 0;
+    background: transparent;
+}
+
+.login #content-main {
+    width: 360px;
+}
+
+.login #content-main .module {
+    background-color: #0b1020;
+    border-radius: 18px;
+    border: 1px solid rgba(54, 212, 255, 0.3);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+    color: var(--blanc-lunaire);
+}
+
+.login #content-main .module h2 {
+    background: transparent;
+    border: none;
+    text-align: center;
+    color: var(--blanc-lunaire);
+}
+
+.login input[type="text"],
+.login input[type="password"] {
+    background: #020617;
+    color: var(--blanc-lunaire);
+    border-color: #1e293b;
+}
+
+/* =========
+   FOOTER
+   ========= */
+#footer {
+    margin-left: 230px;
+    padding: 10px 32px 20px;
+    font-size: 11px;
+    color: #9ca3af;
+    background: transparent;
+}
+
+/* ========== CORRECTION COULEURS TOPBAR ========== */
+
+/* Texte "Bienvenue, admin." */
+#user-tools {
+    font-size: 12px;
+    color: #4b5563;
+    /* gris foncé lisible sur fond blanc */
+}
+
+/* Liens dans #user-tools (username, logout, etc.) */
+#user-tools a,
+#user-tools a:link,
+#user-tools a:visited {
+    color: #1f2933;
+    /* presque noir */
+    font-weight: 600;
+}
+
+#user-tools a:hover,
+#user-tools a:focus {
+    color: var(--bleu-cyber);
+}
+
+/* ======== FORCE TEXTE BLANC SUR LES GROS BOUTONS ======== */
+
+.submit-row input.default,
+.submit-row input[type="submit"].default,
+.submit-row .button.default {
+    color: #ffffff !important;
+}
