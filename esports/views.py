@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from django.db import models
-from .models import Team, Player, Match
-from .serializers import TeamSerializer, PlayerSerializer, MatchSerializer
+from .models import Team, Player, Match, Event
+from .serializers import TeamSerializer, PlayerSerializer, MatchSerializer, EventSerializer
 
 
 class TeamViewSet(viewsets.ModelViewSet):
@@ -50,5 +50,30 @@ class MatchViewSet(viewsets.ModelViewSet):
 
         now = timezone.now()
         qs = self.get_queryset().filter(date__gte=now).order_by("date")
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+
+class EventViewSet(viewsets.ModelViewSet):
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        return Event.objects.all().order_by("start")
+
+    @action(detail=False, methods=["get"])
+    def upcoming(self, request):
+        from django.utils import timezone
+
+        now = timezone.now()
+        qs = self.get_queryset().filter(start__gte=now).order_by("start")
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def replays(self, request):
+        from django.utils import timezone
+
+        now = timezone.now()
+        qs = self.get_queryset().filter(start__lt=now).order_by("-start")
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)

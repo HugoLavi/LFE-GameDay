@@ -28,41 +28,41 @@ function resultLabel(result) {
 }
 
 export default function Matches() {
-  const [matches, setMatches] = useState([]);
+  const [events, setEvents] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchMatches() {
+    async function fetchEvents() {
       try {
         const [allRes, upcomingRes] = await Promise.all([
-          api.get("matches/"),
-          api.get("matches/upcoming/"),
+          api.get("events/"),
+          api.get("events/upcoming/"),
         ]);
-        setMatches(allRes.data);
+        setEvents(allRes.data);
         setUpcoming(upcomingRes.data);
       } catch (err) {
-        console.error("Erreur fetch matches", err);
+        console.error("Erreur fetch événements", err);
       } finally {
         setLoading(false);
       }
     }
-    fetchMatches();
+    fetchEvents();
   }, []);
 
   return (
     <div>
-      <h1 className="page-title">Matchs</h1>
+      <h1 className="page-title">Événements</h1>
       <p className="page-subtitle">
-        Planning global des rencontres de l’association.
+        Agenda complet des événements eSport.
       </p>
 
       <div className="grid-3" style={{ marginBottom: 20 }}>
         <div className="card">
           <div className="card-header">
-            <span className="card-title">Matchs totaux</span>
+            <span className="card-title">Événements totaux</span>
           </div>
-          <div className="card-value">{loading ? "…" : matches.length}</div>
+          <div className="card-value">{loading ? "…" : events.length}</div>
         </div>
         <div className="card">
           <div className="card-header">
@@ -76,33 +76,33 @@ export default function Matches() {
 
       <div className="card">
         <div className="card-header">
-          <span className="card-title">Prochains matchs</span>
+          <span className="card-title">Prochains événements</span>
         </div>
         {loading ? (
           <p>Chargement…</p>
         ) : upcoming.length === 0 ? (
-          <p>Aucun match à venir.</p>
+          <p>Aucun événement à venir.</p>
         ) : (
           <table className="table">
             <thead>
               <tr>
                 <th>Date</th>
-                <th>Affiche</th>
-                <th>Tournoi</th>
+                <th>Titre</th>
+                <th>Lieu</th>
+                <th>Participants</th>
               </tr>
             </thead>
             <tbody>
-              {upcoming.map((m) => (
-                <tr key={m.id}>
+              {upcoming.map((e) => (
+                <tr key={e.id}>
                   <td>
                     <span className="tag tag-upcoming">
-                      {formatDate(m.date)}
+                      {formatDate(e.date)}
                     </span>
                   </td>
-                  <td>
-                    {m.team_a_name} vs {m.team_b_name}
-                  </td>
-                  <td>{m.tournament || "—"}</td>
+                  <td>{e.title}</td>
+                  <td>{e.location || "En ligne"}</td>
+                  <td>{e.participants}</td>
                 </tr>
               ))}
             </tbody>
@@ -114,42 +114,29 @@ export default function Matches() {
 
       <div className="card">
         <div className="card-header">
-          <span className="card-title">Tous les matchs</span>
+          <span className="card-title">Tous les événements</span>
         </div>
         {loading ? (
           <p>Chargement…</p>
-        ) : matches.length === 0 ? (
-          <p>Aucun match enregistré.</p>
+        ) : events.length === 0 ? (
+          <p>Aucun événement enregistré.</p>
         ) : (
           <table className="table">
             <thead>
               <tr>
                 <th>Date</th>
-                <th>Affiche</th>
-                <th>Tournoi</th>
-                <th>Résultat</th>
+                <th>Titre</th>
+                <th>Lieu</th>
+                <th>Participants</th>
               </tr>
             </thead>
             <tbody>
-              {matches.map((m) => (
-                <tr key={m.id}>
-                  <td>{formatDate(m.date)}</td>
-                  <td>
-                    {m.team_a_name} vs {m.team_b_name}
-                  </td>
-                  <td>{m.tournament || "—"}</td>
-                  <td>
-                    <span
-                      className={
-                        "tag " +
-                        (m.result === "P"
-                          ? "tag-upcoming"
-                          : "tag-finished")
-                      }
-                    >
-                      {resultLabel(m.result)}
-                    </span>
-                  </td>
+              {events.map((e) => (
+                <tr key={e.id}>
+                  <td>{formatDate(e.date)}</td>
+                  <td>{e.title}</td>
+                  <td>{e.location || "En ligne"}</td>
+                  <td>{e.participants}</td>
                 </tr>
               ))}
             </tbody>

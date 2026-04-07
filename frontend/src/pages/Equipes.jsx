@@ -2,37 +2,22 @@ import { useEffect, useState } from "react";
 import Navigation from "../components/Navigation";
 import { api } from "../api/client";
 
-function roleLabel(role) {
-  const map = { top: "Top", jungle: "Jungle", mid: "Mid", adc: "ADC", support: "Support" };
-  return map[role] ?? role;
-}
-
 export default function Equipes() {
-  const [teams, setTeams] = useState([]);
-  const [rosters, setRosters] = useState({}); // { [teamId]: Player[] }
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchAll() {
+    async function fetchEvents() {
       try {
-        const teamsRes = await api.get("teams/");
-        setTeams(teamsRes.data);
-
-        const rosterPairs = await Promise.all(
-          teamsRes.data.map(async (t) => {
-            const playersRes = await api.get(`players/?team=${t.id}`);
-            return [t.id, playersRes.data];
-          })
-        );
-
-        setRosters(Object.fromEntries(rosterPairs));
+        const res = await api.get("events/");
+        setEvents(res.data);
       } catch (e) {
-        console.error("Erreur Equipes", e);
+        console.error("Erreur Événements", e);
       } finally {
         setLoading(false);
       }
     }
-    fetchAll();
+    fetchEvents();
   }, []);
 
   return (
@@ -41,120 +26,40 @@ export default function Equipes() {
 
       <section className="section">
         <div className="container">
-          <h1 className="h1">Nos équipes</h1>
-          <p className="p-sub">Découvrez nos équipes compétitives et leurs rosters.</p>
+          <h1 className="h1">Événements eSport</h1>
+          <p className="p-sub">Découvrez le calendrier des prochains événements et participez à la compétition.</p>
 
           {loading ? (
             <p className="p-sub" style={{ marginTop: 16 }}>
               Chargement...
             </p>
-          ) : teams.length === 0 ? (
+          ) : events.length === 0 ? (
             <p className="p-sub" style={{ marginTop: 16 }}>
-              Aucune équipe enregistrée.
+              Aucun événement enregistré.
             </p>
           ) : (
-            <div style={{ marginTop: 20 }} className="grid gap-8">
-              {teams.map((team) => {
-                const players = rosters[team.id] || [];
-                const color = team.color || "#36d4ff";
-                const total = (team.wins ?? 0) + (team.losses ?? 0);
-                const wr = team.winrate ?? (total ? Math.round((team.wins / total) * 100) : 0);
-
-                return (
-                  <div key={team.id} className="card card-pad">
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
-                      <div>
-                        <h2 style={{ margin: 0, color, fontSize: 28, fontWeight: 900, letterSpacing: ".06em" }}>
-                          {team.name}
-                        </h2>
-                        <p className="p-sub" style={{ marginTop: 6 }}>
-                          <strong style={{ color: "#36d4ff" }}>{team.game}</strong>
-                        </p>
-
-                        {team.description ? (
-                          <p className="p-sub" style={{ marginTop: 10, maxWidth: 760 }}>
-                            {team.description}
-                          </p>
-                        ) : null}
-                      </div>
-
-                      <div
-                        style={{
-                          width: 78,
-                          height: 78,
-                          borderRadius: 999,
-                          border: `4px solid ${color}`,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontWeight: 900,
-                          color,
-                        }}
-                        title="Team badge"
-                      >
-                        {team.name?.slice(0, 2)?.toUpperCase()}
-                      </div>
+            <div style={{ marginTop: 20, display: "grid", gap: 16 }}>
+              {events.map((event) => (
+                <div key={event.id} className="card card-pad">
+                  {event.image_url ? <img src={event.image_url} alt={event.title} className="event-card-image" /> : null}
+                  <h2 className="card-title">{event.title}</h2>
+                  <p className="p-sub" style={{ marginBottom: 10 }}>{event.description || "Description à venir"}</p>
+                  <div className="event-meta">
+                    <div className="event-meta-item">
+                      <span>Date</span>
+                      {formatDateFR(event.date)}
                     </div>
-
-                    <div style={{ marginTop: 14 }} className="p-sub">
-                      Rang : <strong>{team.rank || "—"}</strong> ·{" "}
-                      <strong>{team.wins ?? 0}V</strong> / <strong>{team.losses ?? 0}D</strong> ·{" "}
-                      WR <strong>{wr}%</strong>
+                    <div className="event-meta-item">
+                      <span>Heure</span>
+                      {formatTimeFR(event.date)}
                     </div>
-
-                    <h3 className="card-title" style={{ marginTop: 18 }}>
-                      Roster
-                    </h3>
-
-                    {players.length === 0 ? (
-                      <p className="p-sub">Aucun joueur assigné.</p>
-                    ) : (
-                      <div
-                        style={{
-                          marginTop: 10,
-                          display: "grid",
-                          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                          gap: 12,
-                        }}
-                      >
-                        {players.map((p) => (
-                          <div key={p.id} className="card soft card-pad">
-                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                              <div
-                                style={{
-                                  width: 42,
-                                  height: 42,
-                                  borderRadius: 999,
-                                  border: `2px solid ${color}`,
-                                  color,
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  fontWeight: 900,
-                                  fontSize: 12,
-                                }}
-                              >
-                                {p.pseudo?.slice(0, 2)?.toUpperCase()}
-                              </div>
-
-                              <div>
-                                <div style={{ fontWeight: 900 }}>{p.pseudo}</div>
-                                <div className="p-sub" style={{ margin: 0 }}>
-                                  {roleLabel(p.game_role)}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div style={{ marginTop: 10 }} className="p-sub">
-                              Rank : <strong style={{ color: "#eb7e22" }}>{p.rank || "—"}</strong>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    <div className="event-meta-item">
+                      <span>Participants</span>
+                      {event.participants}
+                    </div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           )}
         </div>

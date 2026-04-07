@@ -2,41 +2,42 @@ import { useEffect, useState } from "react";
 import Navigation from "../components/Navigation";
 import { api } from "../api/client";
 
-function formatDateFR(dateStr) {
-  return new Date(dateStr).toLocaleDateString("fr-FR", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+function getDayMonth(dateStr) {
+  const d = new Date(dateStr);
+  return {
+    day: d.toLocaleDateString("fr-FR", { day: "2-digit" }),
+    month: d.toLocaleDateString("fr-FR", { month: "short" }),
+  };
 }
 
-function formatTimeFR(dateStr) {
-  return new Date(dateStr).toLocaleTimeString("fr-FR", {
-    hour: "2-digit",
-    minute: "2-digit",
+function formatDateLong(dateStr) {
+  return new Date(dateStr).toLocaleDateString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   });
 }
 
 export default function Planning() {
-  const [matches, setMatches] = useState([]);
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchMatches() {
+    async function fetchEvents() {
       try {
-        const res = await api.get("matches/");
+        const res = await api.get("events/");
         const sorted = [...res.data].sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
         );
-        setMatches(sorted);
+        setEvents(sorted);
       } catch (e) {
-        console.error("Erreur Planning", e);
+        console.error("Erreur Planning événements", e);
       } finally {
         setLoading(false);
       }
     }
-    fetchMatches();
+    fetchEvents();
   }, []);
 
   return (
@@ -45,108 +46,108 @@ export default function Planning() {
 
       <section className="section">
         <div className="container">
-          <h1 className="h1">Planning des matchs</h1>
-          <p className="p-sub">Suivez les matchs en direct et consultez les replays.</p>
+
+          <div className="planning-header">
+            <h1 className="h1">Planning Game Day</h1>
+            <p className="p-sub">
+              Tous les événements organisés par LFE · Ynov Campus Lille - Studio 02
+            </p>
+          </div>
 
           {loading ? (
-            <p className="p-sub" style={{ marginTop: 16 }}>
-              Chargement...
-            </p>
-          ) : matches.length === 0 ? (
-            <p className="p-sub" style={{ marginTop: 16 }}>
-              Aucun match enregistré.
-            </p>
+            <p className="p-sub">Chargement...</p>
+          ) : events.length === 0 ? (
+            <p className="p-sub">Aucun événement enregistré.</p>
           ) : (
-            <div style={{ marginTop: 20, display: "grid", gap: 14 }}>
-              {matches.map((m) => {
-                const isLive = m.status === "live";
-                const isUpcoming = m.status === "upcoming";
-                const isFinished = m.status === "finished";
+            <div style={{ display: "grid", gap: 16 }}>
+              {events.map((event) => {
+                const isLive     = event.status === "live";
+                const isUpcoming = event.status === "upcoming";
+                const isFinished = event.status === "finished";
+                const { day, month } = getDayMonth(event.date);
 
-                const borderColor = isLive
-                  ? "rgba(235,126,34,.95)"
+                const cardBg = isFinished
+                  ? "rgba(172, 153, 193, 0.08)"
+                  : "rgba(105, 64, 145, 0.22)";
+                const cardBorder = isLive
+                  ? "1px solid rgba(255, 68, 68, 0.6)"
                   : isUpcoming
-                    ? "rgba(54,212,255,.45)"
-                    : "rgba(52,71,151,.9)";
-
-                const bg = isFinished ? "var(--card-soft)" : "var(--card)";
+                    ? "1px solid rgba(255, 223, 7, 0.45)"
+                    : "1px solid rgba(105, 64, 145, 0.35)";
 
                 return (
                   <div
-                    key={m.id}
-                    className="card"
-                    style={{
-                      border: `2px solid ${borderColor}`,
-                      background: bg,
-                      borderRadius: "var(--radius)",
-                      boxShadow: "var(--shadow)",
-                      padding: 18,
-                    }}
+                    key={event.id}
+                    className="planning-card"
+                    style={{ background: cardBg, border: cardBorder }}
                   >
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap" }}>
-                      <div>
-                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
-                          <span
-                            style={{
-                              padding: "6px 10px",
-                              borderRadius: 999,
-                              fontSize: 12,
-                              fontWeight: 900,
-                              letterSpacing: ".06em",
-                              background: isLive
-                                ? "var(--orange-cuivre)"
-                                : isUpcoming
-                                  ? "var(--bleu-futur)"
-                                  : "var(--bleu-cyber)",
-                              color: isLive || isUpcoming ? "var(--bleu-absolu)" : "var(--blanc-lunaire)",
-                            }}
-                          >
-                            {isLive && "🔴 EN DIRECT"}
-                            {isUpcoming && "À VENIR"}
-                            {isFinished && "TERMINÉ"}
-                          </span>
-
-                          <span
-                            style={{
-                              padding: "6px 10px",
-                              borderRadius: 999,
-                              fontSize: 12,
-                              fontWeight: 800,
-                              border: "1px solid rgba(54,212,255,.55)",
-                              color: "var(--bleu-futur)",
-                            }}
-                          >
-                            {m.tournament || "Match"}
-                          </span>
-                        </div>
-
-                        <div style={{ fontSize: 22, fontWeight: 900 }}>
-                          {m.team_a_name} <span style={{ color: "var(--orange-cuivre)" }}>vs</span> {m.team_b_name}
-                        </div>
-
-                        <div className="p-sub" style={{ marginTop: 8 }}>
-                          {formatDateFR(m.date)} · <strong>{formatTimeFR(m.date)}</strong>
-                        </div>
-
-                        <div className="p-sub" style={{ marginTop: 6 }}>
-                          Lieu : <strong>{m.location || "Online"}</strong>
-                        </div>
-                      </div>
-
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        {isLive && m.live_url ? (
-                          <a className="btn btn-primary" href={m.live_url} target="_blank" rel="noreferrer">
-                            Regarder le live →
-                          </a>
-                        ) : null}
-
-                        {isFinished && m.replay_url ? (
-                          <a className="btn btn-outline" href={m.replay_url} target="_blank" rel="noreferrer">
-                            Voir le replay →
-                          </a>
-                        ) : null}
-                      </div>
+                    {/* Date block */}
+                    <div
+                      className="planning-card-date"
+                      style={isFinished ? { background: "var(--lilas)", opacity: 0.7 } : {}}
+                    >
+                      <span className="day">{day}</span>
+                      <span className="month">{month}</span>
                     </div>
+
+                    {/* Content */}
+                    <div className="planning-card-body">
+                      <div className="planning-card-meta">
+                        {isLive && (
+                          <span className="planning-card-badge badge-live">🔴 EN DIRECT</span>
+                        )}
+                        {isUpcoming && (
+                          <span className="planning-card-badge badge-upcoming">À VENIR</span>
+                        )}
+                        {isFinished && (
+                          <span className="planning-card-badge badge-finished">TERMINÉ</span>
+                        )}
+                      </div>
+
+                      <div className="planning-card-title" style={{ fontFamily: "'Oxanium', sans-serif", fontWeight: 800 }}>{event.title}</div>
+
+                      {event.description ? (
+                        <p className="p-sub" style={{ margin: 0, fontSize: 14 }}>
+                          {event.description}
+                        </p>
+                      ) : null}
+
+                      <div className="planning-card-meta" style={{ marginTop: 4 }}>
+                        <span className="planning-card-loc">
+                          🕐 {event.time}
+                        </span>
+                        {event.location && (
+                          <span className="planning-card-loc">
+                            📍 {event.location}
+                          </span>
+                        )}
+                        {event.participants > 0 && (
+                          <span className="planning-card-loc">
+                            👥 {event.participants} participants
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="p-sub" style={{ margin: 0, fontSize: 13, opacity: 0.7 }}>
+                        {formatDateLong(event.date)}
+                      </p>
+                    </div>
+
+                    {/* Action — lien live/replay uniquement si disponible */}
+                    {(isLive && event.live_url) || (isFinished && event.replay_url) ? (
+                      <div className="planning-card-action">
+                        {isLive && event.live_url && (
+                          <a className="btn btn-primary" href={event.live_url} target="_blank" rel="noreferrer">
+                            ▶ Live
+                          </a>
+                        )}
+                        {isFinished && event.replay_url && (
+                          <a className="btn btn-outline" href={event.replay_url} target="_blank" rel="noreferrer">
+                            Replay
+                          </a>
+                        )}
+                      </div>
+                    ) : null}
                   </div>
                 );
               })}

@@ -61,3 +61,31 @@ class Match(models.Model):
 
     def __str__(self):
         return f"{self.team_a} vs {self.team_b} - {self.date.strftime('%d/%m/%Y')}"
+
+
+class Event(models.Model):
+    title = models.CharField(max_length=160)
+    description = models.TextField(blank=True)
+    start = models.DateTimeField()
+    participants = models.PositiveIntegerField(default=0)
+    image_url = models.URLField(blank=True)
+    replay_url = models.URLField("URL de la rediffusion", blank=True)
+    location = models.CharField(max_length=120, blank=True, default="En ligne")
+
+    class Meta:
+        ordering = ["start"]
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def status(self):
+        from django.utils import timezone
+        from datetime import timedelta
+
+        now = timezone.now()
+        if self.start > now:
+            return "upcoming"
+        if self.start <= now < self.start + timedelta(hours=4):
+            return "live"
+        return "finished"

@@ -1,12 +1,13 @@
 from django.contrib import admin
-from .models import Team, Player, Match
+from .models import Team, Player, Match, Event
+
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'game', 'rank', 'wins', 'losses', 'color')
     search_fields = ('name', 'game')
     list_filter = ('game',)
-    
+
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
@@ -21,4 +22,12 @@ class MatchAdmin(admin.ModelAdmin):
     list_filter = ("tournament", "result", "date")
     search_fields = ("team_a__name", "team_b__name")
     date_hierarchy = "date"
-    
+
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ("title", "start", "location", "participants", "status")
+    list_filter = ("location",)
+    search_fields = ("title", "description")
+    date_hierarchy = "start"
+    readonly_fields = ("status",)

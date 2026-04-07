@@ -1,6 +1,30 @@
 from rest_framework import serializers
-from .models import Team, Player, Match
+from .models import Team, Player, Match, Event
 from django.utils import timezone
+
+
+class EventSerializer(serializers.ModelSerializer):
+    date = serializers.DateTimeField(source="start")
+    time = serializers.SerializerMethodField()
+    status = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Event
+        fields = [
+            "id",
+            "title",
+            "description",
+            "date",
+            "time",
+            "location",
+            "participants",
+            "image_url",
+            "replay_url",
+            "status",
+        ]
+
+    def get_time(self, obj):
+        return obj.start.strftime("%H:%M")
 
 
 class TeamSerializer(serializers.ModelSerializer):
