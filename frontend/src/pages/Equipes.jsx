@@ -10,7 +10,7 @@ export default function Equipes() {
     async function fetchEvents() {
       try {
         const res = await api.get("events/");
-        setEvents(res.data);
+        setEvents(Array.isArray(res.data) ? res.data : []);
       } catch (e) {
         console.error("Erreur Événements", e);
       } finally {

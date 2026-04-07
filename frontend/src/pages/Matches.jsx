@@ -39,8 +39,8 @@ export default function Matches() {
           api.get("events/"),
           api.get("events/upcoming/"),
         ]);
-        setEvents(allRes.data);
-        setUpcoming(upcomingRes.data);
+        setEvents(Array.isArray(allRes.data) ? allRes.data : []);
+        setUpcoming(Array.isArray(upcomingRes.data) ? upcomingRes.data : []);
       } catch (err) {
         console.error("Erreur fetch événements", err);
       } finally {

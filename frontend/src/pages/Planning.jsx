@@ -27,7 +27,8 @@ export default function Planning() {
     async function fetchEvents() {
       try {
         const res = await api.get("events/");
-        const sorted = [...res.data].sort(
+        const data = Array.isArray(res.data) ? res.data : [];
+        const sorted = [...data].sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
         );
         setEvents(sorted);

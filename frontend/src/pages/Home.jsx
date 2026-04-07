@@ -35,7 +35,7 @@ export default function Home() {
     async function fetchUpcomingEvents() {
       try {
         const res = await api.get("events/upcoming/");
-        setEvents(res.data.slice(0, 3));
+        setEvents(Array.isArray(res.data) ? res.data.slice(0, 3) : []);
       } catch (e) {
         console.error("Erreur événements à venir", e);
       } finally {
@@ -45,7 +45,7 @@ export default function Home() {
     async function fetchReplays() {
       try {
         const res = await api.get("events/replays/");
-        setReplays(res.data.slice(0, 3));
+        setReplays(Array.isArray(res.data) ? res.data.slice(0, 3) : []);
       } catch (e) {
         console.error("Erreur rediffs", e);
       } finally {
