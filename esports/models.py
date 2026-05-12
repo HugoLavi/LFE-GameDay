@@ -83,6 +83,8 @@ class Event(models.Model):
         from django.utils import timezone
         from datetime import timedelta
 
+        if not self.start:
+            return "upcoming"
         now = timezone.now()
         if self.start > now:
             return "upcoming"
